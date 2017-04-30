@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8"/>
     <title>cobweb.js</title>
-    <script source="./cobweb.js"/>
-    <!-- add css file for canvas to be a fixed % of screen size? -->
   </head>
   <body>
-    <!-- boxes for equation and parameters -->
+    <!-- load script -->
+    <script src="./cobweb.js"></script>
 
+    <!-- add css file for canvas to be a fixed % of screen size? -->
+
+    <!-- boxes for equation and parameters -->
+    <p>Function: <input type="text" id="func" /></p>
+    <p>XMin: <input type="text" id="xmin" /></p>
+    <p>YMin: <input type="text" id="ymin" /></p>
+    <p>XMax: <input type="text" id="xmax" /></p>
+    <p>YMax: <input type="text" id="ymax" /></p>
+    <p>Iterations: <input type="text" id="iters" /></p>
 
     <!-- button to activate script that generates canvas content -->
     <p><button id="generate" onclick="generate()">Generate cobweb
