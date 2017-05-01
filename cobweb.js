@@ -10,6 +10,11 @@ function Graph(canvas,xmin,ymin,xmax,ymax){
     var h=canvas.height;
     var w=canvas.width;
     var borderSize=2;
+    if(//*
+        true ||//*/
+        2*borderSize>h || 2*borderSize>w){ // disable border if it's going to cause a problem
+        bordersize=0;
+    }
     var fillColor='rgb(128,128,128)'; //'rgb(224,224,224)';
     var borderColor='rgb(0,255,0)';
     var drawColor='rgb(0,0,0)';
@@ -20,19 +25,43 @@ function Graph(canvas,xmin,ymin,xmax,ymax){
         ctx.fillRect(0,0,w,h);
         ctx.fillStyle=fillColor;
         ctx.fillRect(borderSize,borderSize,w-2*borderSize,h-2*borderSize);
+        ctx.fillStyle=drawColor
         // TODO: axes?
     }
 
-    // Plot a function.
-    this.plotFunction=function(f){
-        for(var i=borderSize;i<w-borderSize;i++){
-            
-        }
+    // convert a mathematical x coordinate to a canvas x coordinate
+    function mathToCanvasX(x){
+        max=w-borderSize*2;
+        portion=(x-xmin)/(xmax-xmin);
+        return portion*max+borderSize;
+    }
+    // convert a mathematical y coordinate to a canvas y coordinate
+    function mathToCanvasY(y){
+        max=w-borderSize*2;
+        portion=(y-ymin)/(ymax-ymin);
+        return h-(portion*max+borderSize);
     }
 
-    // Plot a line segment.
+    // Plot a line segment, using math function x and y coordinates (not canvas coordinates).
     this.plotLine=function(x1,y1,x2,y2){
-        
+        var cx1=mathToCanvasX(x1);
+        var cy1=mathToCanvasY(y1);
+        var cx2=mathToCanvasX(x2);
+        var cy2=mathToCanvasY(y2);
+        ctx.beginPath();
+        ctx.moveTo(cx1,cy1);
+        ctx.lineTo(cx2,cy2);
+    }
+    // Plot a function.
+    this.plotFunction=function(f){
+        x1=xmin;
+        y1=f(x1);
+        delta=(xmax-xmin)/(w-2*borderSize);
+        for(var x2=xmin+delta;x2<=xmax;x2++){
+            y2=f(x2);
+            this.plotLine(x1,y1,x2,y2);
+        }
+        ctx.stroke();
     }
 }
 
