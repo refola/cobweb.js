@@ -1,23 +1,24 @@
 // cobweb.js
 
+// Global shortcuts for important Math functions
+
 // A graph for drawing mathy things.
 function Graph(canvas,xmin,ymin,xmax,ymax){
     var vars=['canvas','xmin','ymin','xmax','ymax'];
     for(var i in vars){
         eval("var "+vars[i]+"="+vars[i]);
-        log(vars[i]+" is a "+eval("typeof "+vars[i]));
     }
     var ctx=canvas.getContext('2d');
     var h=canvas.height;
     var w=canvas.width;
     var borderSize=2; // a differently-colored area at the outermost part of the canvas to visually indicate the graph's border
-    if(/*
+    if(/*// Change the number of slashes before "*" to enable/disable the border.
         true ||//*/
         2*borderSize>h || 2*borderSize>w){ // disable border if it's going to cause a problem
         borderSize=0;
     }
-    var edgeSize=borderSize+0.5; // a small buffer zone close to the border to keep the graph from crashing into it
-    var fillColor='rgb(128,128,128)'; //'rgb(224,224,224)';
+    var edgeSize=borderSize+0.5; // This small buffer zone close to the border keeps the graph from going half a pixel too far, at least in Firefox.
+    var fillColor='rgb(128,128,128)';
     var borderColor='rgb(0,255,0)';
     var drawColor='rgb(0,0,0)';
 
@@ -28,7 +29,6 @@ function Graph(canvas,xmin,ymin,xmax,ymax){
         ctx.fillStyle=fillColor;
         ctx.fillRect(borderSize,borderSize,w-2*borderSize,h-2*borderSize);
         ctx.strokeStyle=drawColor
-        // TODO: axes?
     }
 
     // convert a mathematical x coordinate to a canvas x coordinate
@@ -46,31 +46,33 @@ function Graph(canvas,xmin,ymin,xmax,ymax){
 
     // Plot a line segment, using math function x and y coordinates (not canvas coordinates).
     this.plotLine=function(x1,y1,x2,y2){
+        // convert coordinates
         var cx1=mathToCanvasX(x1);
         var cy1=mathToCanvasY(y1);
         var cx2=mathToCanvasX(x2);
         var cy2=mathToCanvasY(y2);
-        //log('trying to plot canvas line from ('+cx1+', '+cy1+') to ('+cx2+', '+cy2+').');
+
+        // plot the line segment
         ctx.beginPath();
         ctx.moveTo(cx1,cy1);
         ctx.lineTo(cx2,cy2);
         ctx.stroke();
         ctx.closePath();
     }
+
     // Plot a function.
     this.plotFunction=function(f){
+        // get initial point and distance between points
         x1=xmin;
         y1=f(x1);
         delta=(xmax-xmin)/(w-2*borderSize);
+        // go thru all point values, with 'delta/2' to avoid rounding error preventing the last point from being drawn
         for(var x2=xmin+delta;x2<=xmax+delta/2;x2+=delta){
-            //log(typeof x2);
             y2=f(x2);
-            //log('trying to plot math line from ('+x1+', '+y1+') to ('+x2+', '+y2+').');
             this.plotLine(x1,y1,x2,y2);
             x1=x2;
             y1=y2;
         }
-        ctx.stroke();
     }
 }
 
@@ -87,32 +89,31 @@ function get(name) {
 }
 
 // Convenience function for getting text from a text box
-function getText(name){
-    return elt=get(name).value;
+function getValue(name){
+    return get(name).value;
 }
 
 // Parse a mathematical function into a JavaScript function
 function parseFunction(func){
-    eval("f=function(x){return "+func+";};");
-    log("f="+f.toString());
+    // It's tempting to use "return function(x){return eval(func);};", but that takes about 30% longer.
+    eval("var f=function(x){return "+func+";};");
     return f;
 }
 
 // Generate the requested cobweb diagram.
 function generate() {
-    //log("in generate()");
+    startTime=Date.now();
     
     // get parameters by ID
     var vars=['xmin','xmax','ymin','ymax','x1','iters']
     for(var i in vars){
         var v=vars[i];
-        var cmd='var '+v+'=Number(getText("'+v+'"));'
+        var cmd='var '+v+'=Number(getValue("'+v+'"));'
         eval(cmd);
-        eval("log(v+'="+String(eval(v))+"');");
     }
 
     // parse function
-    var func=parseFunction(getText('func'));
+    var func=parseFunction(getValue('func'));
 
     // get convas and make graph
     var canvas=get('canvas');
@@ -126,14 +127,17 @@ function generate() {
     graph.plotFunction(function(x){return x});
 
     // plot cobweb
-    var y1=f(x1);
+    var y1=func(x1);
     graph.plotLine(x1,ymin,x1,y1);
     for (var i=0;i<iters;i++){
         var x2=y1;
-        var y2=f(x2);
+        var y2=func(x2);
         graph.plotLine(x1,y1,x2,x2);
         graph.plotLine(x2,x2,x2,y2);
         x1=x2;
         y1=y2;
     }
+    
+    endTime=Date.now();
+    log("Diagram generated in "+(endTime-startTime)+" milliseconds.");
 }
