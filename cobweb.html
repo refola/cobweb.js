@@ -11,35 +11,26 @@
 
     <!-- add CSS for canvas to be a fixed % of screen size? -->
 
+    <!-- brief intro -->
+    <h1>Welcome to cobweb.js, a <a href="https://en.wikipedia.org/wiki/Cobweb_plot">cobweb diagram</a> applet using <a href="https://en.wikipedia.org/wiki/Canvas_element">HTML5 canvas</a></h1>
+
     <!-- boxes for equation and parameters -->
-    <p>Function: <input type="text" id="func" autofocus="true"
-    placeholder="4*x*(1-x)" /> (Note: This uses JavaScript
-    syntax.)</p>
-    <p>XMin: <input type="text" id="xmin" size="5" placeholder="0"/>
-      &nbsp;&nbsp;&nbsp;YMin: <input type="text" id="ymin" size="5" placeholder="0"/></p>
-    <p>XMax: <input type="text" id="xmax" size="5" placeholder="1"/>
-    &nbsp;&nbsp;&nbsp;YMax: <input type="text" id="ymax" size="5" placeholder="1"/></p>
-    <p>Initial value: <input type="text" id="x1" size="5"
-    placeholder="0.51"/></p>
-    <p>Iterations: <input type="text" id="iters" size="5"
-    placeholder="100"/></p>
+    <!-- TODO: use a table for allignment? -->
+    <p>Function: <input type="text" id="func" autofocus="true" placeholder="1.95*x*Math.sin(1/x)" /> &nbsp;(Note: This uses JavaScript syntax. See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math">here</a> for math syntax.)</p>
+    <p>XMin: <input type="text" id="xmin" size="5" placeholder="-.5"/> &nbsp;&nbsp;&nbsp; YMin: <input type="text" id="ymin" size="5" placeholder="-.5"/></p>
+    <p>XMax: <input type="text" id="xmax" size="5" placeholder=".5"/> &nbsp;&nbsp;&nbsp; YMax: <input type="text" id="ymax" size="5" placeholder=".5"/></p>
+    <p>Initial value: <input type="text" id="x1" size="8" placeholder="0.51"/></p>
+    <p>Iterations: <input type="text" id="iters" size="5" placeholder="100"/> &nbsp;(Note: Performance may suffer above 10000.)</p>
+
     <!-- TODO: consider adding transient iterations and invert mode -->
 
     <!-- button to activate script that generates canvas content -->
-    <p><button id="generate" onclick="generate()">Generate cobweb
-    diagram!</button></p>
+    <p><button id="generate" onclick="generate()">Generate cobweb diagram!</button></p>
 
-    <!-- <canvas> that it's actually drawn onto; generate at high
-    resolution and use CSS to scale it? -->
-    <canvas id="canvas" width="600" height="600">If your browser
-    supported
-    the <a href="https://en.wikipedia.org/wiki/Canvas_element">HTML5
-    canvas element</a>, then the cobweb diagram would display
-    here.</canvas>
+    <!-- <canvas> that it's actually drawn onto; generate at high resolution and use CSS to scale it? -->
+    <canvas id="canvas" width="600" height="600">If your browser supported the <a href="https://en.wikipedia.org/wiki/Canvas_element">HTML5 canvas element</a>, then the cobweb diagram would display here.</canvas>
 
     <!-- copyright and author notice -->
-    <p>The cobweb.js code is copyright ®2017 Mark Haferkamp and
-    available at
-    <a href="https://github.com/refola/cobweb.js">github.com/refola/cobweb.js</a>.</p>
+    <p>The cobweb.js code is copyright ®2017 Mark Haferkamp and available at <a href="https://github.com/refola/cobweb.js">github.com/refola/cobweb.js</a>.</p>
   </body>
 </html>
