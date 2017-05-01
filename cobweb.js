@@ -17,28 +17,32 @@ function getText(name){
 
 // Parse a mathematical function into a JavaScript function
 function parseFunction(func){
-    log("parseFunction: not implemented")
+    eval("f=function(x){return "+func+";};");
+    log("f="+f.toString());
+    return f;
 }
 
 // Generate the requested cobweb diagram.
 function generate() {
-    log("in generate()");
+    //log("in generate()");
     
     // get parameters by ID
-    var vars=['xmin','xmax','ymin','ymax','iters']
+    var vars=['xmin','xmax','ymin','ymax','x1','iters']
     for(var i in vars){
         var v=vars[i];
         var cmd='var '+v+'=getText("'+v+'");'
-        log("Running: " +cmd);
         eval(cmd);
+        eval("log(v+'="+String(eval(v))+"');");
     }
 
     // parse function
-    var func=parseFunction(get('func'));
+    var func=parseFunction(getText('func'));
 
     // get convas context to draw it
     var ctx=get('canvas').getContext('2d');
 
     // plot it
-    log("genorate(): plotting not implemented");
+    
+    log("generate(): plotting not implemented");
+    
 }
