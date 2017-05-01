@@ -126,7 +126,14 @@ function generate() {
     graph.plotFunction(function(x){return x});
 
     // plot cobweb
+    var y1=f(x1);
+    graph.plotLine(x1,ymin,x1,y1);
     for (var i=0;i<iters;i++){
-        
+        var x2=y1;
+        var y2=f(x2);
+        graph.plotLine(x1,y1,x2,x2);
+        graph.plotLine(x2,x2,x2,y2);
+        x1=x2;
+        y1=y2;
     }
 }
