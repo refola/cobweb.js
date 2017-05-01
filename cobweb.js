@@ -1,5 +1,41 @@
 // cobweb.js
 
+// A graph for drawing mathy things.
+function Graph(canvas,xmin,ymin,xmax,ymax){
+    var vars=['canvas','xmin','ymin','xmax','ymax'];
+    for(var i in vars){
+        eval("var "+vars[i]+"="+vars[i]);
+    }
+    var ctx=canvas.getContext('2d');
+    var h=canvas.height;
+    var w=canvas.width;
+    var borderSize=2;
+    var fillColor='rgb(128,128,128)'; //'rgb(224,224,224)';
+    var borderColor='rgb(0,255,0)';
+    var drawColor='rgb(0,0,0)';
+
+    // Blank out the canvas to a pristine state.
+    this.resetCanvas=function(){
+        ctx.fillStyle=borderColor;
+        ctx.fillRect(0,0,w,h);
+        ctx.fillStyle=fillColor;
+        ctx.fillRect(borderSize,borderSize,w-2*borderSize,h-2*borderSize);
+        // TODO: axes?
+    }
+
+    // Plot a function.
+    this.plotFunction=function(f){
+        for(var i=borderSize;i<w-borderSize;i++){
+            
+        }
+    }
+
+    // Plot a line segment.
+    this.plotLine=function(x1,y1,x2,y2){
+        
+    }
+}
+
 // helper function for debugging
 function log(message) {
     console.log(message)
@@ -38,11 +74,19 @@ function generate() {
     // parse function
     var func=parseFunction(getText('func'));
 
-    // get convas context to draw it
-    var ctx=get('canvas').getContext('2d');
+    // get convas and make graph
+    var canvas=get('canvas');
+    var graph=new Graph(canvas,xmin,ymin,xmax,ymax);
+    graph.resetCanvas();
+    
+    // plot function
+    graph.plotFunction(func);
+    
+    // plot y=x to 'reflect' the cobweb lines off of
+    graph.plotFunction(function(x){return x});
 
-    // plot it
-    
-    log("generate(): plotting not implemented");
-    
+    // plot cobweb
+    for (var i=0;i<iters;i++){
+        
+    }
 }
