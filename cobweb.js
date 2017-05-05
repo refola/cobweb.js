@@ -17,8 +17,16 @@ function GraphTheme(fill,border,draw){
     this.style='source-over'; // for use with ctx.globalCompositeOperation
 }
 
-var brightGraph=new GraphTheme('rgb(255,255,255)','rgb(0,128,0)','rgb(0,0,0)');
+// Two basic themes
+var brightGraph=new GraphTheme('rgba(255,255,255,0)','rgb(0,128,0)','rgb(0,0,0)');
 var darkGraph=new GraphTheme('rgb(0,0,0)','rgb(0,128,0)','rgb(128,128,128)');
+
+// Return a modified theme that uses the xor style.
+function xorTheme(theme){
+    newTheme=JSON.parse(JSON.stringify(theme));
+    newTheme.style='xor';
+    return newTheme;
+}
 
 // A graph for drawing mathy things.
 function Graph(canvas,theme,xmin,ymin,xmax,ymax){
@@ -33,20 +41,33 @@ function Graph(canvas,theme,xmin,ymin,xmax,ymax){
     if(2*borderSize>h || 2*borderSize>w){ // disable border if it's going to be too big
         borderSize=0;
     }
-    var edgeSize=borderSize+0.5; // This small buffer zone close to the border keeps the graph from going half a pixel too far, at least in Firefox.
+    var edgeSize=borderSize+0.5; // this small buffer zone close to the border keeps the graph from going half a pixel too far, at least in firefox.
 
-    // Change the theme for future actions.
-    this.changeTheme=function(newTheme){
-        theme=newTheme;
+    // change the theme for future actions.
+    this.changeTheme=function(newtheme){
+        theme=newtheme;
+        ctx.strokestyle=theme.draw;
+        ctx.globalCompositeOperation=theme.style;
     }
+    // run this when initializing graph
+    this.changeTheme(theme);
 
     // Blank out the canvas to a pristine state.
     this.resetCanvas=function(){
+        // make border
         ctx.fillStyle=theme.border;
         ctx.fillRect(0,0,w,h);
+
+        // make center translucent
+        var oldStyle=ctx.globalCompositeOperation;
+        ctx.globalCompositeOperation='destination-out';
+        ctx.fillStyle='rgb(0,0,0)';
+        ctx.fillRect(borderSize,borderSize,w-2*borderSize,h-2*borderSize);
+        ctx.globalCompositeOperation=oldStyle;
+
+        // fill center however it's actually meant to be filled
         ctx.fillStyle=theme.fill;
         ctx.fillRect(borderSize,borderSize,w-2*borderSize,h-2*borderSize);
-        ctx.strokeStyle=theme.draw
     }
 
     // convert a mathematical x coordinate to a canvas x coordinate
@@ -137,7 +158,7 @@ function generate() {
     // get convas and make graph
     var canvas=get('canvas');
     graphTheme=darkGraph;
-    //graphTheme=brightGraph;
+    graphTheme=brightGraph;
     var graph=new Graph(canvas,graphTheme,xmin,ymin,xmax,ymax);
     graph.resetCanvas();
     
@@ -147,6 +168,9 @@ function generate() {
     // plot y=x to 'reflect' the cobweb lines off of
     graph.plotFunction(function(x){return x});
 
+    // change theme to xor
+    graph.changeTheme(xorTheme(graphTheme));
+    
     // plot cobweb
     var y1=func(x1);
     graph.plotLine(x1,ymin,x1,y1);
@@ -161,4 +185,5 @@ function generate() {
     
     endTime=Date.now();
     log("Diagram generated in "+(endTime-startTime)+" milliseconds.");
+    return graph;
 }
