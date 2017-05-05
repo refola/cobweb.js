@@ -121,16 +121,6 @@ function log(message) {
     console.log(line+": "+message);
 }
 
-// Convenience function for getting elements by ID.
-function get(name) {
-    return document.getElementById(name);
-}
-
-// Convenience function for getting text from a text box
-function getValue(name){
-    return get(name).value;
-}
-
 // Parse a mathematical function into a JavaScript function
 function parseFunction(func){
     // It's tempting to use "return function(x){return eval(func);};", but that takes about 30% longer.
