@@ -1,10 +1,28 @@
 // cobweb.js
 
-// Global shortcuts for important Math functions
+function HtmlTheme(background, text){
+    this.background=background; // HTML background color
+    this.text=text; // HTML text color
+}
+
+// This defines how the graph should look.
+function GraphTheme(fill,border,draw){
+    this.fill=fill; // canvas fill color
+    this.border=border; // canvas border color
+    if(typeof draw=='array'){ // array of colors to draw with
+        this.draw=draw;
+    }else{
+        this.draw=[draw];
+    }
+    this.style='source-over'; // for use with ctx.globalCompositeOperation
+}
+
+var brightGraph=new GraphTheme('rgb(255,255,255)','rgb(0,128,0)','rgb(0,0,0)');
+var darkGraph=new GraphTheme('rgb(0,0,0)','rgb(0,128,0)','rgb(128,128,128)');
 
 // A graph for drawing mathy things.
-function Graph(canvas,xmin,ymin,xmax,ymax){
-    var vars=['canvas','xmin','ymin','xmax','ymax'];
+function Graph(canvas,theme,xmin,ymin,xmax,ymax){
+    var vars=['canvas','theme','xmin','ymin','xmax','ymax'];
     for(var i in vars){
         eval("var "+vars[i]+"="+vars[i]);
     }
@@ -12,23 +30,23 @@ function Graph(canvas,xmin,ymin,xmax,ymax){
     var h=canvas.height;
     var w=canvas.width;
     var borderSize=2; // a differently-colored area at the outermost part of the canvas to visually indicate the graph's border
-    if(/*// Change the number of slashes before "*" to enable/disable the border.
-        true ||//*/
-        2*borderSize>h || 2*borderSize>w){ // disable border if it's going to cause a problem
+    if(2*borderSize>h || 2*borderSize>w){ // disable border if it's going to be too big
         borderSize=0;
     }
     var edgeSize=borderSize+0.5; // This small buffer zone close to the border keeps the graph from going half a pixel too far, at least in Firefox.
-    var fillColor='rgb(128,128,128)';
-    var borderColor='rgb(0,255,0)';
-    var drawColor='rgb(0,0,0)';
+
+    // Change the theme for future actions.
+    this.changeTheme=function(newTheme){
+        theme=newTheme;
+    }
 
     // Blank out the canvas to a pristine state.
     this.resetCanvas=function(){
-        ctx.fillStyle=borderColor;
+        ctx.fillStyle=theme.border;
         ctx.fillRect(0,0,w,h);
-        ctx.fillStyle=fillColor;
+        ctx.fillStyle=theme.fill;
         ctx.fillRect(borderSize,borderSize,w-2*borderSize,h-2*borderSize);
-        ctx.strokeStyle=drawColor
+        ctx.strokeStyle=theme.draw
     }
 
     // convert a mathematical x coordinate to a canvas x coordinate
@@ -118,7 +136,9 @@ function generate() {
 
     // get convas and make graph
     var canvas=get('canvas');
-    var graph=new Graph(canvas,xmin,ymin,xmax,ymax);
+    graphTheme=darkGraph;
+    //graphTheme=brightGraph;
+    var graph=new Graph(canvas,graphTheme,xmin,ymin,xmax,ymax);
     graph.resetCanvas();
     
     // plot function
