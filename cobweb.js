@@ -66,8 +66,9 @@ function Graph(canvas,xmin,ymin,xmax,ymax){
         x1=xmin;
         y1=f(x1);
         delta=(xmax-xmin)/(w-2*borderSize);
-        // go thru all point values, with 'delta/2' to avoid rounding error preventing the last point from being drawn
-        for(var x2=xmin+delta;x2<=xmax+delta/2;x2+=delta){
+        // Go thru all point values, with 'delta/2' to avoid rounding error preventing the last point from being drawn.
+        // Note: Altho "<" vs "<=" is irrelevant with probability 1, only "<" avoids an infinite loop when xmin==xmax, like when their both zero from nothing being entered.
+        for(var x2=xmin+delta;x2<xmax+delta/2;x2+=delta){
             y2=f(x2);
             this.plotLine(x1,y1,x2,y2);
             x1=x2;
