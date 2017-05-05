@@ -9,7 +9,7 @@ function HtmlTheme(background, text){
 function GraphTheme(fill,border,draw){
     this.fill=fill; // canvas fill color
     this.border=border; // canvas border color
-    if(typeof draw=='array'){ // array of colors to draw with
+    if(typeof draw=='object'){ // assume that the object is a string...
         this.draw=draw;
     }else{
         this.draw=[draw];
@@ -19,7 +19,7 @@ function GraphTheme(fill,border,draw){
 // Two basic themes
 var brightGraph=new GraphTheme('#fff','#080','#000');
 var darkGraph=new GraphTheme('#000','#080','#888');
-var testTheme=new GraphTheme('#400','#0f0','#ff0');
+var testTheme=new GraphTheme('#000','#0f0',['#f00','#0f0','#00f']);
 
 // A graph for drawing mathy things.
 function Graph(canvas,theme,xmin,ymin,xmax,ymax){
@@ -39,7 +39,6 @@ function Graph(canvas,theme,xmin,ymin,xmax,ymax){
     // Change to the next color.
     var colorIndex=0;
     this.nextColor=function(){
-        log(ctx.strokeStyle);
         ctx.strokeStyle=theme.draw[colorIndex];
         colorIndex++;
         if(colorIndex>=theme.draw.length){
@@ -93,6 +92,9 @@ function Graph(canvas,theme,xmin,ymin,xmax,ymax){
         ctx.lineTo(cx2,cy2);
         ctx.stroke();
         ctx.closePath();
+
+        // change color for next draw action
+        this.nextColor();
     }
 
     // Plot a function.
@@ -156,13 +158,12 @@ function generate() {
     graphTheme=darkGraph;
     //graphTheme=brightGraph;
     graphTheme=testTheme;
-    log(JSON.stringify(graphTheme));
     var graph=new Graph(canvas,graphTheme,xmin,ymin,xmax,ymax);
     graph.resetCanvas();
-    
+
     // plot function
     graph.plotFunction(func);
-    
+
     // plot y=x to 'reflect' the cobweb lines off of
     graph.plotFunction(function(x){return x});
 
