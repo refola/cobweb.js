@@ -17,8 +17,9 @@ function GraphTheme(fill,border,draw){
 }
 
 // Two basic themes
-var brightGraph=new GraphTheme('rgb(255,255,255)','rgb(0,128,0)','rgb(0,0,0)');
-var darkGraph=new GraphTheme('rgb(0,0,0)','rgb(0,128,0)','rgb(128,128,128)');
+var brightGraph=new GraphTheme('#fff','#080','#000');
+var darkGraph=new GraphTheme('#000','#080','#888');
+var testTheme=new GraphTheme('#400','#0f0','#ff0');
 
 // A graph for drawing mathy things.
 function Graph(canvas,theme,xmin,ymin,xmax,ymax){
@@ -35,10 +36,22 @@ function Graph(canvas,theme,xmin,ymin,xmax,ymax){
     }
     var edgeSize=borderSize+0.5; // This small buffer zone close to the border keeps the graph from going half a pixel too far, at least in firefox.
 
+    // Change to the next color.
+    var colorIndex=0;
+    this.nextColor=function(){
+        log(ctx.strokeStyle);
+        ctx.strokeStyle=theme.draw[colorIndex];
+        colorIndex++;
+        if(colorIndex>=theme.draw.length){
+            colorIndex=0
+        }
+    }
+
     // Change the theme for future actions.
     this.changeTheme=function(newtheme){
         theme=newtheme;
-        ctx.strokestyle=theme.draw;
+        colorIndex=0;
+        this.nextColor();
     }
 
     // Blank out the canvas to a pristine state.
@@ -50,7 +63,7 @@ function Graph(canvas,theme,xmin,ymin,xmax,ymax){
         // fill center however it's actually meant to be filled
         ctx.fillStyle=theme.fill;
         ctx.fillRect(borderSize,borderSize,w-2*borderSize,h-2*borderSize);
-        ctx.strokestyle=theme.draw;
+        this.nextColor();
     }
 
     // convert a mathematical x coordinate to a canvas x coordinate
@@ -142,6 +155,7 @@ function generate() {
     var canvas=get('canvas');
     graphTheme=darkGraph;
     //graphTheme=brightGraph;
+    graphTheme=testTheme;
     log(JSON.stringify(graphTheme));
     var graph=new Graph(canvas,graphTheme,xmin,ymin,xmax,ymax);
     graph.resetCanvas();
