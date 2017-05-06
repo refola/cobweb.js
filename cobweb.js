@@ -128,38 +128,19 @@ function parseFunction(func){
     return f;
 }
 
-// Generate the requested cobweb diagram.
-function generate() {
-    startTime=Date.now();
-    
-    // get parameters by ID
-    var vars=['xmin','xmax','ymin','ymax','x1','iters']
-    for(var i in vars){
-        var v=vars[i];
-        var cmd='var '+v+'=Number(getValue("'+v+'"));'
-        eval(cmd);
+// GLobal OBjects
+var glob={};
+
+function cobweb(iters,theme){
+    var graph=glob.graph;
+    var func=glob.func;
+    var x1=glob.x1;
+    if(theme){
+    	graph.changeTheme(theme);
     }
-
-    // parse function
-    var func=parseFunction(getValue('func'));
-
-    // get convas and make graph
-    var canvas=get('canvas');
-    graphTheme=darkGraph;
-    //graphTheme=brightGraph;
-    graphTheme=testTheme;
-    var graph=new Graph(canvas,graphTheme,xmin,ymin,xmax,ymax);
-    graph.resetCanvas();
-
-    // plot function
-    graph.plotFunction(func);
-
-    // plot y=x to 'reflect' the cobweb lines off of
-    graph.plotFunction(function(x){return x});
-
-    // plot cobweb
+    
     var y1=func(x1);
-    graph.plotLine(x1,ymin,x1,y1);
+    //graph.plotLine(x1,ymin,x1,y1);
     for (var i=0;i<iters;i++){
         var x2=y1;
         var y2=func(x2);
@@ -168,8 +149,60 @@ function generate() {
         x1=x2;
         y1=y2;
     }
+    glob.x1=x1;
+}
+
+function cont(){
+	cobweb(Number(getValue("iters")));
+}
+
+function clearCont(){
+	plotFn();
+	cobweb(Number(getValue("iters")),testTheme);
+}
+
+function plotFn(){
+	glob.graph.changeTheme(brightGraph);
+	glob.graph.resetCanvas();
+	glob.graph.plotFunction(glob.func);
+	glob.graph.plotFunction(function(x){return x});
+}
+
+// Generate the requested cobweb diagram.
+function generate() {
+    startTime=Date.now();
     
+    // get parameters by ID
+    var vars=['xmin','xmax','ymin','ymax','x1','iters']
+    for(var i in vars){
+        var v=vars[i];
+        eval('var '+v+'=Number(getValue("'+v+'"));');
+        eval('glob.'+v+'=Number(getValue("'+v+'"));');
+    }
+
+    // parse function
+    glob.func=getValue('func');
+    
+    // save params to URL
+    globToHash();
+    
+    var func=parseFunction(getValue('func'));
+
+    // get convas and make graph
+    var canvas=get('canvas');
+    //graphTheme=darkGraph;
+    graphTheme=brightGraph;
+    //graphTheme=testTheme;
+    var graph=new Graph(canvas,graphTheme,xmin,ymin,xmax,ymax);
+    graph.resetCanvas();
+    glob.func=func;
+    glob.graph=graph;
+    glob.x1=x1;
+	plotFn();
+    
+    // plot cobweb
+    cobweb(iters,testTheme);
+
     endTime=Date.now();
     log("Diagram generated in "+(endTime-startTime)+" milliseconds.");
-    return graph;
 }

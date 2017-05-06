@@ -14,7 +14,7 @@ function getHashParams(){
     params=JSON.parse(decodeURI(window.location.hash).slice(1));
     for(i in defaultParams){
         v=defaultParams[i];
-        log(i+"="+v);
+        //log(i+"="+v);
     }
     return params;
 }
@@ -31,11 +31,11 @@ window.onhashchange();
 // Load parameters from URL hash
 function loadParams(){
     var params=JSON.parse(JSON.stringify(defaultParams));
-    log("Default params are: "+JSON.stringify(params));
+    //log("Default params are: "+JSON.stringify(params));
     try{
-        var hashParams=JSON.stringify(getHashParams());
+        var hashParams=getHashParams();
         for(i in params){
-            log("Procossing param: "+i);
+            //log("Processing param: "+i);
             if(hashParams[i]){
                 params[i]=hashParams[i];
             }
@@ -86,4 +86,11 @@ function setValue(name, value){
     }else{
         log("Can't set "+name+" to "+value+": null");
     }
+}
+
+function globToHash(){
+	var params=JSON.parse(JSON.stringify(glob));
+	delete params["graph"];
+	setHashParams(params);
+	log(window.location.hash);
 }

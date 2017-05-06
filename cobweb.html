@@ -21,18 +21,26 @@
     <!-- TODO: consider adding transient iterations and invert mode -->
 
     <!-- button to activate script that generates canvas content -->
-    <p><button id="generate" onclick="generate()">Generate cobweb diagram!</button></p>
+    <p><button id="generate" onclick="generate()">Generate cobweb diagram!</button>
+	<button id="cont" onclick="cont()">Moar iterations!</button>
+	<button id="clearCont" onclick="clearCont()">Clear and MOAR iterations!</button></p>
 
     <!-- <canvas> that it's actually drawn onto; generate at high resolution and use CSS to scale it? -->
     <canvas id="canvas" width="600" height="600">If your browser supported the <a href="https://en.wikipedia.org/wiki/Canvas_element">HTML5 canvas element</a>, then the cobweb diagram would display here.</canvas>
 
     <!-- copyright and author notice -->
-    <p>The cobweb.js code is copyright ®2017 Mark Haferkamp and available at <a href="https://github.com/refola/cobweb.js">github.com/refola/cobweb.js</a>.</p>
+    <p>The cobweb.js code is copyright ®2017 Mark Haferkamp. This is available under <a href="LICENSE">this license</a> and the latest code will generally be available at <a href="https://github.com/refola/cobweb.js">github.com/refola/cobweb.js</a>.</p>
 
     <!-- load scripts -->
     <script src="./cobweb.js">This is the inside of the script tag.</script>
     <script src="./params.js"></script>
     <noscript>Please enable JavaScript for this to work.</noscript>
-    <a href="#{'xmin':0,'ymin':0}">click</a>
+    <p>Examples:
+	<ul><li><a href="#{%22xmin%22:0,%22xmax%22:1,%22ymin%22:0,%22ymax%22:1,%22x1%22:0.51,%22iters%22:100,%22func%22:%224*x*(1-x)%22}">Logistic map</a></li>
+	<li><a href="#{%22xmin%22:-1,%22xmax%22:1,%22ymin%22:-1,%22ymax%22:1,%22x1%22:0.2,%22iters%22:100,%22func%22:%221.95*x*Math.sin(1/x)%22}">Does it converge?</a></li>
+	<li><a href="#{%22xmin%22:0,%22xmax%22:1,%22ymin%22:0,%22ymax%22:1,%22x1%22:0.51,%22iters%22:100,%22func%22:%223.57*x*(1-x)%22}">a=3.57</a></li>
+	<li><a href="">x </a></li>
+	<li><a href="">x </a></li>
+	</ul>
   </body>
 </html>
