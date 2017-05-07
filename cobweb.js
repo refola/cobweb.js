@@ -22,11 +22,13 @@ var darkGraph=new GraphTheme('#000','#080','#888');
 var testTheme=new GraphTheme('#000','#0f0',['#f00','#0f0','#00f']);
 
 // A graph for drawing mathy things.
-function Graph(canvas,theme,xmin,ymin,xmax,ymax){
-    var vars=['canvas','theme','xmin','ymin','xmax','ymax'];
-    for(var i in vars){
-        eval("var "+vars[i]+"="+vars[i]);
-    }
+function Graph(canvas,theme){
+    var xmin=glob.xmin;
+    var ymin=glob.ymin;
+    var xmax=glob.xmax;
+    var ymax=glob.ymax;
+    var canvas=canvas;
+    var theme=theme;
     var ctx=canvas.getContext('2d');
     var h=canvas.height;
     var w=canvas.width;
@@ -105,7 +107,7 @@ function Graph(canvas,theme,xmin,ymin,xmax,ymax){
         delta=(xmax-xmin)/(w-2*borderSize);
         // Go thru all point values, with 'delta/2' to avoid rounding error preventing the last point from being drawn.
         // Note: Altho "<" vs "<=" is irrelevant with probability 1, only "<" avoids an infinite loop when xmin==xmax, like when their both zero from nothing being entered.
-        for(var x2=xmin+delta;x2<xmax+delta/2;x2+=delta){
+        for(var x2=xmin+delta; x2<xmax+delta/2; x2+=delta){
             y2=f(x2);
             this.plotLine(x1,y1,x2,y2);
             x1=x2;
@@ -131,9 +133,10 @@ function parseFunction(func){
 // GLobal OBjects
 var glob={};
 
-function cobweb(iters,theme){
+function cobweb(theme){
+    var iters=glob.iters;
     var graph=glob.graph;
-    var func=glob.func;
+    var func=glob.execFunc;
     var x1=glob.x1;
     if(theme){
     	graph.changeTheme(theme);
@@ -153,55 +156,41 @@ function cobweb(iters,theme){
 }
 
 function cont(){
-	cobweb(Number(getValue("iters")));
+	cobweb();
 }
 
 function clearCont(){
 	plotFn();
-	cobweb(Number(getValue("iters")),testTheme);
+	cobweb(testTheme);
 }
 
 function plotFn(){
-	glob.graph.changeTheme(brightGraph);
-	glob.graph.resetCanvas();
-	glob.graph.plotFunction(glob.func);
-	glob.graph.plotFunction(function(x){return x});
+    glob.graph.changeTheme(brightGraph);
+    glob.graph.resetCanvas();
+    glob.graph.plotFunction(glob.execFunc);
+    glob.graph.plotFunction(function(x){return x});
 }
 
 // Generate the requested cobweb diagram.
 function generate() {
     startTime=Date.now();
-    
-    // get parameters by ID
-    var vars=['xmin','xmax','ymin','ymax','x1','iters']
-    for(var i in vars){
-        var v=vars[i];
-        eval('var '+v+'=Number(getValue("'+v+'"));');
-        eval('glob.'+v+'=Number(getValue("'+v+'"));');
-    }
 
-    // parse function
-    glob.func=getValue('func');
-    
-    // save params to URL
+    formToGlob();
     globToHash();
-    
-    var func=parseFunction(getValue('func'));
+    glob.execFunc=parseFunction(glob.func);
 
     // get convas and make graph
     var canvas=get('canvas');
     //graphTheme=darkGraph;
     graphTheme=brightGraph;
     //graphTheme=testTheme;
-    var graph=new Graph(canvas,graphTheme,xmin,ymin,xmax,ymax);
+    var graph=new Graph(canvas,graphTheme);
     graph.resetCanvas();
-    glob.func=func;
     glob.graph=graph;
-    glob.x1=x1;
-	plotFn();
+    plotFn();
     
     // plot cobweb
-    cobweb(iters,testTheme);
+    cobweb(testTheme);
 
     endTime=Date.now();
     log("Diagram generated in "+(endTime-startTime)+" milliseconds.");
