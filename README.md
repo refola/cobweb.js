@@ -10,11 +10,9 @@ It's currently available at [dana.ucc.nau.edu/mh442/cobweb.js/cobweb.html](http:
 1. Fill in the requested cobweb details and click `Generate cobweb diagram!`
 
 # Planned updates
-* Code cleanup/refactor (especially params.js)
+* More code cleanup/refactoring
 * Proper themes support (at least light and dark, likely with a cookie to save the selection as an individual preference)
 * More example functions (the logistic map isn't everything)
-* Displaying a copyable/sharable link for showing a diagram (currently only the hash is given, but via the console)
-* Generating the diagram without having to click the button (so someone following a link immediately sees the diagram)
 * Auto-updating sliders (i.e., slide to change a value and the diagram is regenerated accordingly)
 
 # Copyright and License

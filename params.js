@@ -92,5 +92,14 @@ function globToHash(){
         params[param]=glob[param];
     }
     setHashParams(params);
-    log(window.location.hash);
+    log(window.location);
+    try{
+        url=get("url");
+        log("url="+url);
+        log("url.innerHTML="+url.innerHTML);
+        get("url").innerHTML='<a href="'+window.location+'">'+window.location+'</a>';
+        log(url);
+    } catch(e) {
+        log("Error showing URL: "+e);
+    }
 }
