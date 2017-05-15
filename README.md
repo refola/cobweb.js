@@ -2,7 +2,7 @@
 This is a simple [cobweb diagram](https://en.wikipedia.org/wiki/Cobweb_plot) generator in JavaScript, compatible with all modern browsers, and safely running without any plugins, etcetera.
 
 # Run it now
-It's currently available at [dana.ucc.nau.edu/mh442/cobweb.js/cobweb.html](http://dana.ucc.nau.edu/mh442/cobweb.js/cobweb.html), but that version is likely to lag behind this one.
+It's currently available at [oak.ucc.nau.edu/jws8/cobweb/cobweb.html](http://oak.ucc.nau.edu/jws8/cobweb/cobweb.html), which should be fairly close to the latest version.
 
 # Directions from source
 1. Download at least the `cobweb.html`, `cobweb.js`, and `params.js` pages in the same folder.
