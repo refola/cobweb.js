@@ -1,3 +1,6 @@
+# Archive note
+Once upon a time, I had plans to make this better. But life got in the way and I'm not likely to come back to this. Feel free to fork, etc.
+
 # cobweb.js
 This is a simple [cobweb diagram](https://en.wikipedia.org/wiki/Cobweb_plot) generator in JavaScript, compatible with all modern browsers, and safely running without any plugins, etcetera.
 

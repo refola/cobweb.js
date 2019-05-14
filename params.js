@@ -94,6 +94,7 @@ function globToHash(){
     setHashParams(params);
     log(window.location);
     try{
+        // TODO: Logging shows that this runs three times when the page is loaded from scratch. I'm pretty sure this is two more times than should happen.
         url=get("url");
         log("url="+url);
         log("url.innerHTML="+url.innerHTML);
